@@ -46,10 +46,12 @@ public class SecurityConfig {
         return http
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((auth) ->
-                        auth.requestMatchers("/api/v1/dashboard/home", "/api/v1/user/add", "/api/v1/dashboard/authenticate", "/h2-console/**").permitAll()
+                        auth.requestMatchers("/api/v1/dashboard/home", "/api/v1/user/add", "/api/v1/dashboard/authenticate", "/h2-console/**")
+                                .permitAll()
                                 .requestMatchers("/api/v1/dashboard/**")
                                 .authenticated())
-                .formLogin(Customizer.withDefaults())
+                .sessionManagement((session) ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
